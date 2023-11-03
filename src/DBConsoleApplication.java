@@ -9,6 +9,7 @@ public class DBConsoleApplication {
     private final String DBNAME = "studentdb";
     private final String DBURL = "jdbc:mysql://" + HOSTNAME + "/" + DBNAME;
 
+//    Create data or insert data
     private void insertData(){
         try {
             System.out.println("Connecting to the database...");
@@ -30,6 +31,7 @@ public class DBConsoleApplication {
         }
     }
 
+//    Read data or retrieve data
     public void retrieveData(){
         try {
             System.out.println("Connecting to the database...");
@@ -58,6 +60,34 @@ public class DBConsoleApplication {
         }
     }
 
+//    Update data
+    public void updateData(){
+        try {
+            System.out.println("Connecting to the database...");
+            Connection connection = DriverManager.getConnection(DBURL,USERNAME,PASSWORD);
+            System.out.println("Connection OK!");
+
+            String query = "update student set name = 'Karim Rahman' where id = 104;";
+
+            Statement statement = connection.createStatement();
+
+            int resultSet = statement.executeUpdate(query);
+            System.out.println("Data updated");
+
+//            next returns a boolean
+            if(resultSet >0){
+                System.out.println("Student updated successfully");
+            }
+
+            connection.close();
+
+        } catch (SQLException sqle) {
+//            throw new RuntimeException(sqle);
+            System.out.println(("something went wrong!" + sqle));
+        }
+    }
+
+//Delete data
     public void deleteData(){
         try {
             System.out.println("Connecting to the database...");
@@ -66,19 +96,11 @@ public class DBConsoleApplication {
 
             String query = "delete from student where id = 105;";
 
-            Statement statement = connection.createStatement();
+            Statement statement = connection.prepareStatement(query);
 
-            ResultSet resultSet = statement.executeQuery(query);
-            System.out.println("Retrieve Data");
-
-//            next returns a boolean
-            while (resultSet.next()){
-                int studentId = resultSet.getInt("id");
-                String studentName = resultSet.getString("name");
-                String address = resultSet.getString("address");
-                String phone = resultSet.getString("phone");
-
-                System.out.println(studentId + " " + studentName+" "+address+" "+phone);
+            int resultSet = statement.executeUpdate(query);
+            if(resultSet > 0){
+                System.out.println("Data deleted");
             }
 
             connection.close();
@@ -94,7 +116,8 @@ public class DBConsoleApplication {
     public DBConsoleApplication() {
 //        insertData();
 //        retrieveData();
-          deleteData();
+//          deleteData();
+          updateData();
     }
 
     public static void main(String[] args) {
