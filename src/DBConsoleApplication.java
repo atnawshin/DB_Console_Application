@@ -140,7 +140,6 @@ public class DBConsoleApplication {
                 }
             }
 
-
             connection.close();
 
         } catch (SQLException sqle) {
