@@ -18,12 +18,12 @@ public class DBConsoleApplication {
             Connection connection = DriverManager.getConnection(DBURL,USERNAME,PASSWORD);
             System.out.println("Connection OK!");
 
-            String query1 = "insert into student values(106,'Himu','some where in dhaka','938957');";
+            String query1 = "insert into student values(105,'Bela Bosh','some where in bd','2441139');";
 
-            String query2 = "insert into student values(107,'Nila','some where in bhutergoli','45768');";
+//            String query2 = "insert into student values(107,'Nila','some where in bhutergoli','45768');";
 
             listOfQuery.add(query1);
-            listOfQuery.add(query2);
+//            listOfQuery.add(query2);
 
             Statement statement = connection.createStatement();
 
@@ -37,36 +37,50 @@ public class DBConsoleApplication {
 
         } catch (SQLException sqle) {
 //            throw new RuntimeException(sqle);
-            System.out.println(("something" + sqle));
+            System.out.println(("something went wrong!" + sqle));
         }
     }
 
 //    Read data or retrieve data
     public void retrieveData(){
+        ArrayDeque<String> listOfQuery = new ArrayDeque<>();
         try {
             System.out.println("Connecting to the database...");
             Connection connection = DriverManager.getConnection(DBURL,USERNAME,PASSWORD);
             System.out.println("Connection OK!");
 
-            String query = "select * from student;";
+            String query1 = "select * from student;";
+            String query2 = "select id,'name' from student where id = 101;";
+
+            listOfQuery.add(query1);
+            listOfQuery.add(query2);
 
             Statement statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery(query);
+            for(String query:listOfQuery){
+                statement.execute(query);
+                ResultSet resultSet = statement.executeQuery(query);
+
+                while (resultSet.next()){
+                    int studentId = resultSet.getInt("id");
+                    String studentName = resultSet.getString("name");
+                    String address = resultSet.getString("address");
+                    String phone = resultSet.getString("phone");
+
+                    System.out.println(studentId + " " + studentName+" "+address+" "+phone);
+                }
+            }
+
             System.out.println("Retrieve Data");
 
 //            next returns a boolean
-            while (resultSet.next()){
-                int studentId = resultSet.getInt("id");
-                String studentName = resultSet.getString("name");
-                System.out.println(studentId + " " + studentName);
-            }
+
 
             connection.close();
 
         } catch (SQLException sqle) {
 //            throw new RuntimeException(sqle);
-            System.out.println(("something" + sqle));
+            System.out.println(("something went wrong!" + sqle));
         }
     }
 
@@ -97,47 +111,35 @@ public class DBConsoleApplication {
 
         } catch (SQLException sqle) {
 //            throw new RuntimeException(sqle);
-            System.out.println(("something" + sqle));
+            System.out.println(("something went wrong!" + sqle));
         }
     }
 
-//    Update data
-//private void updateData(){
-//    try {
-//        System.out.println("Connecting to the database...");
-//        Connection connection = DriverManager.getConnection(DBURL,USERNAME,PASSWORD);
-//        System.out.println("Connection OK!");
-//
-//        String query = "UPDATE student s, parents p set s.phone = '101', p.phone = '102' where s.id = 101 && p.id = 101;";
-//
-//        Statement statement = connection.createStatement();
-//
-//        statement.execute(query);
-//        System.out.println("Record inserted");
-//
-//        connection.close();
-//
-//    } catch (SQLException sqle) {
-////            throw new RuntimeException(sqle);
-//        System.out.println(("something went wrong!" + sqle));
-//    }
-//}
-
 //Delete data
     public void deleteData(){
+        ArrayDeque<String> listOfQuery = new ArrayDeque<>();
         try {
             System.out.println("Connecting to the database...");
             Connection connection = DriverManager.getConnection(DBURL,USERNAME,PASSWORD);
             System.out.println("Connection OK!");
 
-            String query = "delete from student where id = 105;";
+            String query1 = "delete from student where id = 105;";
+//            String query2 = "delete from student where id = 106;";
 
-            Statement statement = connection.prepareStatement(query);
 
-            int resultSet = statement.executeUpdate(query);
-            if(resultSet > 0){
-                System.out.println("Data deleted");
+            listOfQuery.add(query1);
+//            listOfQuery.add(query2);
+
+
+            for(String query:listOfQuery){
+                Statement statement = connection.prepareStatement(query);
+//                statement.execute(query);
+                int resultSet = statement.executeUpdate(query);
+                if(resultSet > 0){
+                    System.out.println("Data deleted");
+                }
             }
+
 
             connection.close();
 
